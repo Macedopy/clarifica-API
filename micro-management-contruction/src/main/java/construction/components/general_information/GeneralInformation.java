@@ -1,52 +1,103 @@
 package construction.components.general_information;
 
-import construction.components.general.Topography;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 
-public class GeneralInformation extends PanacheEntityBase{
+@Entity
+@Table(name = "general_information")
+public class GeneralInformation extends PanacheEntityBase {
+
     @Id
     private String id;
 
-    @Column(name = "localization", nullable = false)
-    private String localization;
+    @Column(name = "phase_id", nullable = false, unique = true)
+    private String phaseId;
 
-    @Column(name = "topography", nullable = false)
+    @NotBlank(message = "Address is required")
+    @Column(nullable = false, length = 500)
+    private String address;
+
+    @Min(value = 0, message = "Land area must be positive")
+    @Column(name = "land_area", nullable = false)
+    private double landArea;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Topography topography;
 
-    @Email(message = "Invalid email format")
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(nullable = false)
-    private String phone;
+    @Column(name = "technical_manager", length = 200)
+    private String technicalManager;
 
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF must be in the format XXX.XXX.XXX-XX")
-    @Column(nullable = false, unique = true)
-    private String cpf;
+    @Column(length = 1000)
+    private String observations;
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getPhaseId() {
+        return phaseId;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setPhaseId(String phaseId) {
+        this.phaseId = phaseId;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getAddress() {
+        return address;
+    }
 
-    public String getCpf() { return cpf; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public String fullName() {
-        return firstName + " " + lastName;
+    public double getLandArea() {
+        return landArea;
+    }
+
+    public void setLandArea(double landArea) {
+        this.landArea = landArea;
+    }
+
+    public Topography getTopography() {
+        return topography;
+    }
+
+    public void setTopography(Topography topography) {
+        this.topography = topography;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getTechnicalManager() {
+        return technicalManager;
+    }
+
+    public void setTechnicalManager(String technicalManager) {
+        this.technicalManager = technicalManager;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 }

@@ -1,7 +1,5 @@
 package construction.components.used_material;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum MaterialCategory {
     CEMENT("Cimento"),
     SAND("Areia"),
@@ -18,7 +16,6 @@ public enum MaterialCategory {
         this.displayName = displayName;
     }
 
-    @JsonValue
     public String getDisplayName() {
         return displayName;
     }

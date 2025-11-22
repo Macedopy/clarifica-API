@@ -1,7 +1,5 @@
 package construction.components.used_material;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum MaterialUnit {
     BAG("saco"),
     KG("kg"),
@@ -15,7 +13,6 @@ public enum MaterialUnit {
         this.symbol = symbol;
     }
 
-    @JsonValue
     public String getSymbol() {
         return symbol;
     }
