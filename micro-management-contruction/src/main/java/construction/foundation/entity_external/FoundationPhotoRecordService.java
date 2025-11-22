@@ -32,11 +32,13 @@ public class FoundationPhotoRecordService {
         
         for (PhotoRecordDTO dto : dtos) {
             FoundationPhotoRecord entity = mapToEntity(dto);
+            
             if (dto.getId() == null || dto.getId().isBlank()) {
                 entity.setId(UUID.randomUUID().toString());
             } else {
                 entity.setId(dto.getId());
             }
+            
             entity.setPhaseId(phaseId);
             entity.setFoundation(foundation); 
             
@@ -50,19 +52,18 @@ public class FoundationPhotoRecordService {
         entity.setFilePath(dto.getFilePath());
         entity.setCaption(dto.getCaption());
         
-        if (dto.getCategory() != null) {
-            entity.setCategory(PhotoCategory.valueOf(dto.getCategory().toUpperCase()));
-        } else {
-            entity.setCategory(PhotoCategory.PROGRESS); 
-        }
+        entity.setCategory(PhotoCategory.fromString(dto.getCategory()));
 
         if (dto.getUploadedAt() != null) {
-            entity.setUploadedAt(LocalDateTime.parse(dto.getUploadedAt()));
+            try {
+                entity.setUploadedAt(LocalDateTime.parse(dto.getUploadedAt()));
+            } catch (Exception e) {
+                entity.setUploadedAt(LocalDateTime.now());
+            }
         } else {
             entity.setUploadedAt(LocalDateTime.now());
         }
         
         return entity;
     }
-    
 }

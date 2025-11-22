@@ -8,7 +8,10 @@ public enum PhotoCategory {
     ISSUE("problema"),
     BEFORE("antes"),
     AFTER("depois"),
-    SAFETY("segurança");
+    SAFETY("segurança"),
+    // Adicione estas linhas abaixo:
+    DIARIO_OBRA("diario_obra"), 
+    OUTROS("outros");
 
     private final String displayName;
 
@@ -23,11 +26,15 @@ public enum PhotoCategory {
 
     @JsonCreator
     public static PhotoCategory fromString(String value) {
-        if (value == null) return null;
+        if (value == null) return PROGRESS; // Padrão seguro se for nulo
+        
         for (PhotoCategory c : values()) {
-            if (c.displayName.equalsIgnoreCase(value)) return c;
+            // Verifica tanto o nome da constante (DIARIO_OBRA) quanto o displayName (diario_obra)
+            if (c.name().equalsIgnoreCase(value) || c.displayName.equalsIgnoreCase(value)) {
+                return c;
+            }
         }
-        try { return PhotoCategory.valueOf(value.toUpperCase()); }
-        catch (Exception e) { return PROGRESS; }
+        // Se não encontrar, retorna OUTROS ou PROGRESS para não travar o sistema
+        return OUTROS; 
     }
 }
