@@ -1,13 +1,13 @@
-package construction.eletric;
+package construction.coatings;
 
-import construction.eletric.entity_external.EletricExecutedService;
+import construction.coatings.entity_external.CoatingsExecutedService;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "eletric")
-public class Eletric extends PanacheEntityBase {
+@Table(name = "coatings")
+public class Coatings extends PanacheEntityBase {
     
     @Id
     private String id;
@@ -19,8 +19,8 @@ public class Eletric extends PanacheEntityBase {
     private String contractor;
 
     // Relacionamento com os serviços executados
-    @OneToMany(mappedBy = "eletric", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<EletricExecutedService> executedServices;
+    @OneToMany(mappedBy = "coatings", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CoatingsExecutedService> executedServices;
 
     // Getters e Setters
     public String getId() { return id; }
@@ -32,6 +32,6 @@ public class Eletric extends PanacheEntityBase {
     public String getContractor() { return contractor; }
     public void setContractor(String contractor) { this.contractor = contractor; }
 
-    public List<EletricExecutedService> getExecutedServices() { return executedServices; }
-    public void setExecutedServices(List<EletricExecutedService> executedServices) { this.executedServices = executedServices; }
+    public List<CoatingsExecutedService> getExecutedServices() { return executedServices; }
+    public void setExecutedServices(List<CoatingsExecutedService> executedServices) { this.executedServices = executedServices; }
 }
