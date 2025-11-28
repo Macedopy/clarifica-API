@@ -1,24 +1,23 @@
-package construction.coatings.entity_external;
+package construction.hydraulic.entity_external;
 
 import construction.components.executed_services.ExecutedServiceStatus;
-import construction.coatings.Coatings;
+import construction.hydraulic.Hydraulic;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import com.fasterxml.jackson.annotation.JsonIgnore; // novo
-// @NotBlank removido
 
 @Entity
-@Table(name = "coatings_executed_services")
-public class CoatingsExecutedService extends PanacheEntityBase {
-    
+@Table(name = "hydraulic_executed_services")
+public class HydraulicExecutedService extends PanacheEntityBase {
+
     @Id
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coatings_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "hydraulic_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore // ESTA LINHA IMPEDE O LOOP DE SERIALIZAÇÃO
-    private Coatings coatings;
+    private Hydraulic hydraulic;
 
     @Transient
     private String phaseId;
@@ -29,11 +28,11 @@ public class CoatingsExecutedService extends PanacheEntityBase {
     @Column(nullable = false)
     private String team;
 
-    @Min(value = 1, message = "Planned hours must be greater than 0")
+    @Min(1)
     @Column(name = "planned_hours", nullable = false)
     private double plannedHours;
 
-    @Min(value = 0, message = "Executed hours cannot be negative")
+    @Min(0)
     @Column(name = "executed_hours", nullable = false)
     private double executedHours = 0.0;
 
@@ -41,7 +40,7 @@ public class CoatingsExecutedService extends PanacheEntityBase {
     @Column(nullable = false)
     private ExecutedServiceStatus status;
 
-    @Min(value = 0)
+    @Min(0)
     @Column(nullable = false)
     private int progress = 0;
 
@@ -64,8 +63,8 @@ public class CoatingsExecutedService extends PanacheEntityBase {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Coatings getCoatings() { return coatings; }
-    public void setCoatings(Coatings coatings) { this.coatings = coatings; }
+    public Hydraulic getHydraulic() { return hydraulic; }
+    public void setHydraulic(Hydraulic hydraulic) { this.hydraulic = hydraulic; }
 
     public String getPhaseId() { return phaseId; }
     public void setPhaseId(String phaseId) { this.phaseId = phaseId; }

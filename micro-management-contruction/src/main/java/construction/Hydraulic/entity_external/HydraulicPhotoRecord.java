@@ -1,28 +1,26 @@
-package construction.coatings.entity_external;
+package construction.hydraulic.entity_external;
 
-import construction.coatings.Coatings;
 import construction.components.photo.PhotoCategory;
+import construction.hydraulic.Hydraulic;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore; // novo
-// @NotBlank removido
 
 @Entity
-@Table(name = "coatings_photo_records")
-public class CoatingsPhotoRecord extends PanacheEntityBase {
+@Table(name = "hydraulic_photo_records")
+public class HydraulicPhotoRecord extends PanacheEntityBase {
 
     @Id
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coatings_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "hydraulic_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore // ESTA LINHA IMPEDE O LOOP DE SERIALIZAÇÃO
-    private Coatings coatings;
-    
-    @Transient
-    private String phaseId; 
+    private Hydraulic hydraulic;
 
-    // @NotBlank removido
+    @Transient
+    private String phaseId;
+
     @Column(name = "file_path", nullable = false, length = 1000)
     private String filePath;
 
@@ -40,8 +38,8 @@ public class CoatingsPhotoRecord extends PanacheEntityBase {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Coatings getCoatings() { return coatings; }
-    public void setCoatings(Coatings coatings) { this.coatings = coatings; }
+    public Hydraulic getHydraulic() { return hydraulic; }
+    public void setHydraulic(Hydraulic hydraulic) { this.hydraulic = hydraulic; }
 
     public String getPhaseId() { return phaseId; }
     public void setPhaseId(String phaseId) { this.phaseId = phaseId; }

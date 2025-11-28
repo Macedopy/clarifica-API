@@ -1,26 +1,25 @@
-package construction.coatings.entity_external;
+package construction.hydraulic.entity_external;
 
-import construction.coatings.Coatings;
 import construction.components.used_material.MaterialCategory;
 import construction.components.used_material.MaterialUnit;
+import construction.hydraulic.Hydraulic;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import com.fasterxml.jackson.annotation.JsonIgnore; // novo
-// @NotBlank removido
 
 @Entity
-@Table(name = "coatings_materials")
-public class CoatingsMaterial extends PanacheEntityBase {
-    
+@Table(name = "hydraulic_materials")
+public class HydraulicMaterial extends PanacheEntityBase {
+
     @Id
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coatings_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "hydraulic_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore // ESTA LINHA IMPEDE O LOOP DE SERIALIZAÇÃO
-    private Coatings coatings;
-    
+    private Hydraulic hydraulic;
+
     @Transient
     private String phaseId;
 
@@ -53,7 +52,7 @@ public class CoatingsMaterial extends PanacheEntityBase {
     @Column(name = "urgency")
     private String urgency;
 
-    // Lógica de atualização de estoque
+    // Atualiza automaticamente o status de reposição
     @PostLoad
     @PostPersist
     @PostUpdate
@@ -61,13 +60,13 @@ public class CoatingsMaterial extends PanacheEntityBase {
         this.needsRestock = this.currentStock <= this.minimumStock;
     }
 
-    // Getters and Setters
+    // Getters e Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Coatings getCoatings() { return coatings; }
-    public void setCoatings(Coatings coatings) { this.coatings = coatings; }
-    
+    public Hydraulic getHydraulic() { return hydraulic; }
+    public void setHydraulic(Hydraulic hydraulic) { this.hydraulic = hydraulic; }
+
     public String getPhaseId() { return phaseId; }
     public void setPhaseId(String phaseId) { this.phaseId = phaseId; }
 
