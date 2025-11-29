@@ -1,5 +1,7 @@
 package construction.eletric.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.team_present.MemberStatus;
 import construction.components.team_present.TeamMemberDetails;
 import construction.eletric.Eletric;
@@ -15,6 +17,7 @@ public class EletricTeamMember extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eletric_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Eletric eletric;
 
     @Transient

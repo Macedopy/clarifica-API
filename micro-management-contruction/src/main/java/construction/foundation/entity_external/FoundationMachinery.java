@@ -1,5 +1,7 @@
 package construction.foundation.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.machinery.Condition;
 import construction.components.machinery.FuelUnit;
 import construction.foundation.Foundation;
@@ -16,7 +18,9 @@ public class FoundationMachinery extends PanacheEntityBase {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "foundation_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "foundation_id", referencedColumnName = "id", nullable 
+    = false)
+    @JsonIgnore
     private Foundation foundation;
     
     @Transient

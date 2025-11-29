@@ -1,5 +1,7 @@
 package construction.eletric.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.used_material.MaterialCategory;
 import construction.components.used_material.MaterialUnit;
 import construction.eletric.Eletric;
@@ -17,6 +19,7 @@ public class EletricMaterial extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eletric_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Eletric eletric;
     
     @Transient

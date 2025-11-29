@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
-import jakarta.ws.rs.NotFoundException; 
 
 @Path("/eletric")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,17 +25,27 @@ public class EletricController {
         try {
             System.out.println("========== INICIANDO SALVAMENTO ELÉTRICA ==========");
             System.out.println("Phase ID: " + phaseId);
+            System.out.println("DTO recebido: " + detailsDTO);
             
             Eletric eletric = new Eletric();
             eletric.setId(phaseId);
             eletric.setName(detailsDTO.getPhaseName()); 
             eletric.setContractor(detailsDTO.getContractor());
             
-            System.out.println("[1/2] Salvando Eletric (Pai)...");
+            System.out.println("[1/3] Salvando Eletric...");
             eletricService.saveEletric(eletric);
+            System.out.println("[1/3] ✓ Eletric salva com sucesso!");
             
-            System.out.println("[2/2] Salvando detalhes da fase...");
+            System.out.println("[2/3] Verificando detalhes do DTO...");
+            if (detailsDTO.getEquipe() != null) {
+                System.out.println("  - Equipe: " + detailsDTO.getEquipe().size() + " membros");
+            } else {
+                System.out.println("  - Equipe: NULL");
+            }
+            
+            System.out.println("[3/3] Salvando detalhes da fase...");
             eletricService.saveAllPhaseDetails(phaseId, detailsDTO);
+            System.out.println("[3/3] ✓ Detalhes salvos com sucesso!");
             
             System.out.println("========== ELÉTRICA SALVA COM SUCESSO ==========\n");
             
@@ -46,7 +55,10 @@ public class EletricController {
                              
         } catch (Exception e) {
             System.err.println("========== ERRO NO SALVAMENTO ELÉTRICA ==========");
+            System.err.println("Erro: " + e.getMessage());
             e.printStackTrace();
+            System.err.println("=========================================\n");
+            
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity(new ErrorDTO("Erro ao salvar Elétrica", e.getMessage()))
                            .build();
@@ -56,13 +68,27 @@ public class EletricController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateEletric(@PathParam("id") String id, Eletric updatedEletric) {
+    public Response updateEletric(@PathParam("id") String id, EletricDTO detailsDTO) {
         try {
-            eletricService.updateEletric(id, updatedEletric);
+            System.out.println("========== INICIANDO UPDATE COMPLETO ELÉTRICA ==========");
+            Eletric tempEletric = new Eletric();
+            
+            if (detailsDTO.getPhaseName() != null) {
+                tempEletric.setName(detailsDTO.getPhaseName());
+            }
+            tempEletric.setContractor(detailsDTO.getContractor());
+            
+            eletricService.updateEletric(id, tempEletric);
+
+            eletricService.saveAllPhaseDetails(id, detailsDTO);
+            
+            System.out.println("========== UPDATE CONCLUÍDO ==========");
+
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity("Erro ao atualizar: " + e.getMessage())
                            .build();
@@ -98,7 +124,6 @@ public class EletricController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    // Classes auxiliares para resposta
     public static class ResponseDTO {
         public String message;
         public String phaseId;

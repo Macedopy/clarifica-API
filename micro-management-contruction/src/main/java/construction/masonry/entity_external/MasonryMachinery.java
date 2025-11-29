@@ -1,5 +1,7 @@
 package construction.masonry.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.machinery.Condition;
 import construction.components.machinery.FuelUnit;
 import construction.masonry.Masonry;
@@ -16,6 +18,7 @@ public class MasonryMachinery extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "masonry_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Masonry masonry;
     
     @Transient

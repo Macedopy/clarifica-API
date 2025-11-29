@@ -1,5 +1,7 @@
 package construction.finishing.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.team_present.MemberStatus;
 import construction.components.team_present.TeamMemberDetails;
 import construction.finishing.Finishing;
@@ -15,6 +17,7 @@ public class FinishingTeamMember extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finishing_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Finishing finishing;
 
     @Transient

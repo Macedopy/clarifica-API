@@ -1,5 +1,7 @@
 package construction.eletric.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.tools.ToolCondition;
 import construction.eletric.Eletric;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -16,6 +18,7 @@ public class EletricTool extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eletric_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Eletric eletric;
 
     @Transient

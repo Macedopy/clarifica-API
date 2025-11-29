@@ -1,5 +1,7 @@
 package construction.finishing.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.executed_services.ExecutedServiceStatus;
 import construction.finishing.Finishing;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -16,6 +18,7 @@ public class FinishingExecutedService extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finishing_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Finishing finishing;
 
     @Transient

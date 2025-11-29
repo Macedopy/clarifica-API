@@ -1,5 +1,7 @@
 package construction.foundation.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.team_present.MemberStatus;
 import construction.components.team_present.TeamMemberDetails;
 import construction.foundation.Foundation;
@@ -15,6 +17,7 @@ public class FoundationTeamMember extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "foundation_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Foundation foundation;
 
     @Transient

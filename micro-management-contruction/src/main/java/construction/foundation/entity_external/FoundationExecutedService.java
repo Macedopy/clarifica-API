@@ -1,5 +1,7 @@
 package construction.foundation.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.executed_services.ExecutedServiceStatus;
 import construction.foundation.Foundation;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -16,6 +18,8 @@ public class FoundationExecutedService extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "foundation_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
+
     private Foundation foundation;
 
     @Transient

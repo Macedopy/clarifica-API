@@ -1,5 +1,7 @@
 package construction.finishing.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.machinery.Condition;
 import construction.components.machinery.FuelUnit;
 import construction.finishing.Finishing;
@@ -17,6 +19,7 @@ public class FinishingMachinery extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finishing_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Finishing finishing;
     
     @Transient

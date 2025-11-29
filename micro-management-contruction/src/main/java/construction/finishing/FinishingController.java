@@ -8,8 +8,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
 
-import jakarta.ws.rs.NotFoundException; 
-
 @Path("/finishing")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,7 +23,7 @@ public class FinishingController {
         String phaseId = UUID.randomUUID().toString();
         
         try {
-            System.out.println("========== INICIANDO SALVAMENTO ==========");
+            System.out.println("========== INICIANDO SALVAMENTO FINISHING ==========");
             System.out.println("Phase ID: " + phaseId);
             System.out.println("DTO recebido: " + detailsDTO);
             
@@ -49,20 +47,20 @@ public class FinishingController {
             finishingService.saveAllPhaseDetails(phaseId, detailsDTO);
             System.out.println("[3/3] ✓ Detalhes salvos com sucesso!");
             
-            System.out.println("========== SALVAMENTO CONCLUÍDO COM SUCESSO ==========\n");
+            System.out.println("========== FINISHING SALVO COM SUCESSO ==========\n");
             
             return Response.status(Response.Status.CREATED)
-                           .entity(new ResponseDTO("Fase criada com sucesso", phaseId))
+                           .entity(new ResponseDTO("Fase Finishing criada com sucesso", phaseId))
                            .build();
                              
         } catch (Exception e) {
-            System.err.println("========== ERRO NO SALVAMENTO ==========");
+            System.err.println("========== ERRO NO SALVAMENTO FINISHING ==========");
             System.err.println("Erro: " + e.getMessage());
             e.printStackTrace();
             System.err.println("=========================================\n");
             
             return Response.status(Response.Status.BAD_REQUEST)
-                           .entity(new ErrorDTO("Erro ao salvar", e.getMessage()))
+                           .entity(new ErrorDTO("Erro ao salvar Finishing", e.getMessage()))
                            .build();
         }
     }
@@ -70,13 +68,27 @@ public class FinishingController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateFinishing(@PathParam("id") String id, Finishing updatedFinishing) {
+    public Response updateFinishing(@PathParam("id") String id, FinishingDTO detailsDTO) {
         try {
-            finishingService.updateFinishing(id, updatedFinishing);
+            System.out.println("========== INICIANDO UPDATE COMPLETO FINISHING ==========");
+            Finishing tempFinishing = new Finishing();
+            
+            if (detailsDTO.getPhaseName() != null) {
+                tempFinishing.setName(detailsDTO.getPhaseName());
+            }
+            tempFinishing.setContractor(detailsDTO.getContractor());
+            
+            finishingService.updateFinishing(id, tempFinishing);
+
+            finishingService.saveAllPhaseDetails(id, detailsDTO);
+            
+            System.out.println("========== UPDATE CONCLUÍDO ==========");
+
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity("Erro ao atualizar: " + e.getMessage())
                            .build();
@@ -92,7 +104,6 @@ public class FinishingController {
         
         try {
             finishingService.saveAllPhaseDetails(phaseId, detailsDTO);
-            
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -104,7 +115,6 @@ public class FinishingController {
     @GET
     @Path("/{id}")
     public Response getFinishing(@PathParam("id") String id) {
-        
         Optional<Finishing> finishing = finishingService.getFinishingById(id);
 
         if (finishing.isPresent()) {

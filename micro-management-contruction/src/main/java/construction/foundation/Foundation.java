@@ -1,15 +1,16 @@
 package construction.foundation;
 
-import construction.foundation.entity_external.FoundationTeamMember;
-import construction.foundation.entity_external.FoundationMaterial;
-import construction.foundation.entity_external.FoundationTool;
-import construction.foundation.entity_external.FoundationMachinery;
 import construction.foundation.entity_external.FoundationExecutedService;
+import construction.foundation.entity_external.FoundationMachinery;
+import construction.foundation.entity_external.FoundationMaterial;
 import construction.foundation.entity_external.FoundationPhotoRecord;
-
-import jakarta.persistence.*;
+import construction.foundation.entity_external.FoundationTeamMember;
+import construction.foundation.entity_external.FoundationTool;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "foundations")
@@ -21,54 +22,100 @@ public class Foundation extends PanacheEntityBase {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "contractor")
     private String contractor;
 
-    // Relacionamentos - CORRIGIDO: mappedBy aponta para o atributo da entidade relacionada
-    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<FoundationTeamMember> teamMembers;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationMaterial> materials = new ArrayList<>();
 
-    // COMENTADO PARA TESTES
-    //@OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    //private List<FoundationMaterial> materials;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationTool> tools = new ArrayList<>();
 
-    //@OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    //private List<FoundationTool> tools;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationMachinery> machinery = new ArrayList<>();
 
-    //@OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    //private List<FoundationMachinery> machineries;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationTeamMember> teamMembers = new ArrayList<>();
 
-    //@OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    //private List<FoundationExecutedService> executedServices;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationExecutedService> services = new ArrayList<>();
 
-    //@OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    //private List<FoundationPhotoRecord> photoRecords;
+    @OneToMany(mappedBy = "foundation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FoundationPhotoRecord> photoRecords = new ArrayList<>();
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Foundation() {
+        this.id = UUID.randomUUID().toString();
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getId() {
+        return id;
+    }
 
-    public String getContractor() { return contractor; }
-    public void setContractor(String contractor) { this.contractor = contractor; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public List<FoundationTeamMember> getTeamMembers() { return teamMembers; }
-    public void setTeamMembers(List<FoundationTeamMember> teamMembers) { this.teamMembers = teamMembers; }
+    public String getName() {
+        return name;
+    }
 
-    // COMENTADO PARA TESTES
-    //public List<FoundationMaterial> getMaterials() { return materials; }
-    //public void setMaterials(List<FoundationMaterial> materials) { this.materials = materials; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    //public List<FoundationTool> getTools() { return tools; }
-    //public void setTools(List<FoundationTool> tools) { this.tools = tools; }
+    public String getContractor() {
+        return contractor;
+    }
 
-    //public List<FoundationMachinery> getMachineries() { return machineries; }
-    //public void setMachineries(List<FoundationMachinery> machineries) { this.machineries = machineries; }
+    public void setContractor(String contractor) {
+        this.contractor = contractor;
+    }
 
-    //public List<FoundationExecutedService> getExecutedServices() { return executedServices; }
-    //public void setExecutedServices(List<FoundationExecutedService> executedServices) { this.executedServices = executedServices; }
+    public List<FoundationMaterial> getMaterials() {
+        return materials;
+    }
 
-    //public List<FoundationPhotoRecord> getPhotoRecords() { return photoRecords; }
-    //public void setPhotoRecords(List<FoundationPhotoRecord> photoRecords) { this.photoRecords = photoRecords; }
+    public void setMaterials(List<FoundationMaterial> materials) {
+        this.materials = materials;
+    }
+
+    public List<FoundationTool> getTools() {
+        return tools;
+    }
+
+    public void setTools(List<FoundationTool> tools) {
+        this.tools = tools;
+    }
+
+    public List<FoundationMachinery> getMachinery() {
+        return machinery;
+    }
+
+    public void setMachinery(List<FoundationMachinery> machinery) {
+        this.machinery = machinery;
+    }
+
+    public List<FoundationTeamMember> getTeamMembers() {
+        return teamMembers;
+    }
+
+    public void setTeamMembers(List<FoundationTeamMember> teamMembers) {
+        this.teamMembers = teamMembers;
+    }
+
+    public List<FoundationExecutedService> getServices() {
+        return services;
+    }
+
+    public void setServices(List<FoundationExecutedService> services) {
+        this.services = services;
+    }
+
+    public List<FoundationPhotoRecord> getPhotoRecords() {
+        return photoRecords;
+    }
+
+    public void setPhotoRecords(List<FoundationPhotoRecord> photoRecords) {
+        this.photoRecords = photoRecords;
+    }
 }

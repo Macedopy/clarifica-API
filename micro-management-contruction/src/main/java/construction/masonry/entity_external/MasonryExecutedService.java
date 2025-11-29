@@ -1,5 +1,7 @@
 package construction.masonry.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.executed_services.ExecutedServiceStatus;
 import construction.masonry.Masonry;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -15,6 +17,7 @@ public class MasonryExecutedService extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "masonry_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore 
     private Masonry masonry;
 
     @Transient

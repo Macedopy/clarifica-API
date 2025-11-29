@@ -1,5 +1,7 @@
 package construction.masonry.entity_external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import construction.components.tools.ToolCondition;
 import construction.masonry.Masonry;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -16,6 +18,7 @@ public class MasonryTool extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "masonry_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Masonry masonry;
 
     @Transient

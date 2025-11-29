@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
-import jakarta.ws.rs.NotFoundException; 
 
 @Path("/masonry")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,17 +25,27 @@ public class MasonryController {
         try {
             System.out.println("========== INICIANDO SALVAMENTO MASONRY ==========");
             System.out.println("Phase ID: " + phaseId);
+            System.out.println("DTO recebido: " + detailsDTO);
             
             Masonry masonry = new Masonry();
             masonry.setId(phaseId);
             masonry.setName(detailsDTO.getPhaseName()); 
             masonry.setContractor(detailsDTO.getContractor());
             
-            System.out.println("[1/2] Salvando Masonry...");
+            System.out.println("[1/3] Salvando Masonry...");
             masonryService.saveMasonry(masonry);
+            System.out.println("[1/3] ✓ Masonry salva com sucesso!");
             
-            System.out.println("[2/2] Salvando detalhes da fase...");
+            System.out.println("[2/3] Verificando detalhes do DTO...");
+            if (detailsDTO.getEquipe() != null) {
+                System.out.println("  - Equipe: " + detailsDTO.getEquipe().size() + " membros");
+            } else {
+                System.out.println("  - Equipe: NULL");
+            }
+            
+            System.out.println("[3/3] Salvando detalhes da fase...");
             masonryService.saveAllPhaseDetails(phaseId, detailsDTO);
+            System.out.println("[3/3] ✓ Detalhes salvos com sucesso!");
             
             System.out.println("========== MASONRY SALVO COM SUCESSO ==========\n");
             
@@ -46,7 +55,10 @@ public class MasonryController {
                              
         } catch (Exception e) {
             System.err.println("========== ERRO NO SALVAMENTO MASONRY ==========");
+            System.err.println("Erro: " + e.getMessage());
             e.printStackTrace();
+            System.err.println("=========================================\n");
+            
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity(new ErrorDTO("Erro ao salvar Masonry", e.getMessage()))
                            .build();
@@ -56,13 +68,27 @@ public class MasonryController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateMasonry(@PathParam("id") String id, Masonry updatedMasonry) {
+    public Response updateMasonry(@PathParam("id") String id, MasonryDTO detailsDTO) {
         try {
-            masonryService.updateMasonry(id, updatedMasonry);
+            System.out.println("========== INICIANDO UPDATE COMPLETO MASONRY ==========");
+            Masonry tempMasonry = new Masonry();
+            
+            if (detailsDTO.getPhaseName() != null) {
+                tempMasonry.setName(detailsDTO.getPhaseName());
+            }
+            tempMasonry.setContractor(detailsDTO.getContractor());
+            
+            masonryService.updateMasonry(id, tempMasonry);
+
+            masonryService.saveAllPhaseDetails(id, detailsDTO);
+            
+            System.out.println("========== UPDATE CONCLUÍDO ==========");
+
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity("Erro ao atualizar: " + e.getMessage())
                            .build();
@@ -96,7 +122,6 @@ public class MasonryController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    // Classes auxiliares para resposta
     public static class ResponseDTO {
         public String message;
         public String phaseId;

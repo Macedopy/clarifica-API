@@ -8,9 +8,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
 
-// Import necessário para o PUT no final do arquivo
-import jakarta.ws.rs.NotFoundException; 
-
 @Path("/foundation")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,7 +23,7 @@ public class FoundationController {
         String phaseId = UUID.randomUUID().toString();
         
         try {
-            System.out.println("========== INICIANDO SALVAMENTO ==========");
+            System.out.println("========== INICIANDO SALVAMENTO FOUNDATION ==========");
             System.out.println("Phase ID: " + phaseId);
             System.out.println("DTO recebido: " + detailsDTO);
             
@@ -45,26 +42,25 @@ public class FoundationController {
             } else {
                 System.out.println("  - Equipe: NULL");
             }
-            // ... (restante dos sysouts do seu código original)
             
             System.out.println("[3/3] Salvando detalhes da fase...");
             foundationService.saveAllPhaseDetails(phaseId, detailsDTO);
             System.out.println("[3/3] ✓ Detalhes salvos com sucesso!");
             
-            System.out.println("========== SALVAMENTO CONCLUÍDO COM SUCESSO ==========\n");
+            System.out.println("========== FOUNDATION SALVA COM SUCESSO ==========\n");
             
             return Response.status(Response.Status.CREATED)
-                           .entity(new ResponseDTO("Fase criada com sucesso", phaseId))
+                           .entity(new ResponseDTO("Fase Foundation criada com sucesso", phaseId))
                            .build();
                              
         } catch (Exception e) {
-            System.err.println("========== ERRO NO SALVAMENTO ==========");
+            System.err.println("========== ERRO NO SALVAMENTO FOUNDATION ==========");
             System.err.println("Erro: " + e.getMessage());
             e.printStackTrace();
             System.err.println("=========================================\n");
             
             return Response.status(Response.Status.BAD_REQUEST)
-                           .entity(new ErrorDTO("Erro ao salvar", e.getMessage()))
+                           .entity(new ErrorDTO("Erro ao salvar Foundation", e.getMessage()))
                            .build();
         }
     }
@@ -72,13 +68,27 @@ public class FoundationController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateFoundation(@PathParam("id") String id, Foundation updatedFoundation) {
+    public Response updateFoundation(@PathParam("id") String id, FoundationDTO detailsDTO) {
         try {
-            foundationService.updateFoundation(id, updatedFoundation);
+            System.out.println("========== INICIANDO UPDATE COMPLETO FOUNDATION ==========");
+            Foundation tempFoundation = new Foundation();
+            
+            if (detailsDTO.getPhaseName() != null) {
+                tempFoundation.setName(detailsDTO.getPhaseName());
+            }
+            tempFoundation.setContractor(detailsDTO.getContractor());
+            
+            foundationService.updateFoundation(id, tempFoundation);
+
+            foundationService.saveAllPhaseDetails(id, detailsDTO);
+            
+            System.out.println("========== UPDATE CONCLUÍDO ==========");
+
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity("Erro ao atualizar: " + e.getMessage())
                            .build();
@@ -93,11 +103,7 @@ public class FoundationController {
         FoundationDTO detailsDTO) {
         
         try {
-             // Você pode precisar de um import para FoundationService se FoundationDTO não estiver no mesmo pacote.
-             // foundationService.getFoundationById(phaseId).orElseThrow(() -> new NotFoundException("Foundation not found"));
-
             foundationService.saveAllPhaseDetails(phaseId, detailsDTO);
-            
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -109,7 +115,6 @@ public class FoundationController {
     @GET
     @Path("/{id}")
     public Response getFoundation(@PathParam("id") String id) {
-        
         Optional<Foundation> foundation = foundationService.getFoundationById(id);
 
         if (foundation.isPresent()) {
@@ -119,7 +124,6 @@ public class FoundationController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    // Classes auxiliares para resposta
     public static class ResponseDTO {
         public String message;
         public String phaseId;
